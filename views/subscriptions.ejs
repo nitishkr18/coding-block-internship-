@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Subscriptions - Subscription Management System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">Subscription Management System</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/plans">Plans</a></li>
+          <li class="nav-item"><a class="nav-link" href="/customers">Customers</a></li>
+          <li class="nav-item"><a class="nav-link active" href="/subscriptions">Subscriptions</a></li>
+          <li class="nav-item"><a class="nav-link" href="/invoices">Invoices</a></li>
+          <li class="nav-item"><a class="nav-link" href="/reports">Reports</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>Subscriptions</h2>
+      <a href="/subscription/new" class="btn btn-primary">Add Subscription</a>
+    </div>
+
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Customer Name</th>
+          <th>Plan Name</th>
+          <th>Start Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% subscriptions.forEach(function(sub) { %>
+          <tr>
+            <td><%= sub.id %></td>
+            <td><%= sub.customerName %></td>
+            <td><%= sub.planName %></td>
+            <td><%= sub.startDate %></td>
+            <td>
+              <% if(sub.status === 'Active') { %>
+                <span class="badge bg-success">Active</span>
+              <% } else if(sub.status === 'Cancelled') { %>
+                <span class="badge bg-danger">Cancelled</span>
+              <% } else { %>
+                <span class="badge bg-secondary"><%= sub.status %></span>
+              <% } %>
+            </td>
+            <td>
+              <div class="d-flex gap-2">
+                <a href="/subscription/edit/<%= sub.id %>" class="btn btn-warning btn-sm">Edit</a>
+                <% if(sub.status !== 'Cancelled') { %>
+                  <form action="/subscription/cancel/<%= sub.id %>?_method=PUT" method="POST">
+                    <button type="submit" class="btn btn-secondary btn-sm">Cancel</button>
+                  </form>
+                <% } %>
+                <form action="/subscription/delete/<%= sub.id %>?_method=DELETE" method="POST">
+                  <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
